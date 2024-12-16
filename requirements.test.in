@@ -1,8 +1,0 @@
-black
-docker
-flake8
-isort
-pandas
-pip-tools
-pylint
-pytest

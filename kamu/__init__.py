@@ -1,5 +1,7 @@
 from . import _connection
-from ._version import VERSION
+
+
+__version__ = "0.1.0"
 
 
 def connect(url):

@@ -1,11 +1,10 @@
 # Developer Instructions
 
-## Environment Setup
+## Initial Setup
 Normal `virtualenv` setup:
 ```sh
 python -m venv .venv
 source .venv/bin/activate
-pip install --upgrade pip
 pip install --upgrade -r requirements.txt
 pip install -e .
 ```

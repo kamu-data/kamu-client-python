@@ -1,3 +1,2 @@
 - Set sane default connection timeouts
-- PyPi publish
 - CI actions

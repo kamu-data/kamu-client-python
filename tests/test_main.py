@@ -7,7 +7,7 @@ import kamu
 
 def test_version():
     assert re.fullmatch(
-        r"\d\.\d\.\d", kamu.VERSION
+        r"\d\.\d\.\d", kamu.__version__
     ), "Version doesn't match the pattern"
 
 

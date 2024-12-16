@@ -1,3 +1,7 @@
+###############################################################################
+# Dev
+###############################################################################
+
 .PHONY: fmt
 fmt:
 	black .
@@ -15,11 +19,38 @@ test:
 	pytest -s
 
 
-.PHONY: deps
-deps:
+###############################################################################
+# Dependencies
+###############################################################################
+
+.PHONY: deps-compile
+deps-compile:
 	pip-compile \
-		--output-file requirements.txt \
+		--all-extras \
 		--upgrade \
 		--rebuild \
-		requirements.in \
-		requirements.test.in 
+		pyproject.toml
+
+
+.PHONY: deps-sync
+deps-sync:
+	pip-sync requirements.txt
+
+
+.PHONY: deps
+deps: deps-compile deps-sync
+
+
+###############################################################################
+# Publishing
+###############################################################################
+
+.PHONY: build
+build:
+	python -m build
+	twine check dist/*
+
+
+.PHONY: publish
+publish: build
+	twine upload dist/*
