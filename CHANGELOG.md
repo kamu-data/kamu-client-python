@@ -11,7 +11,7 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
-## [0.1.1] - 2024-12-16
+## [0.1.2] - 2024-12-16
 ### Added
 - Keeping a CHANGELOG
 - Initial wrapper around ADBC connection

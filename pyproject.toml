@@ -30,7 +30,7 @@ requires-python = ">=3.9"
 
 [project.urls]
 Homepage = "https://kamu.dev"
-Documentation = "https://readthedocs.org"
+Documentation = "https://docs.kamu.dev"
 Repository = "https://github.com/kamu-data/kamu-client-python"
 Issues = "https://github.com/kamu-data/kamu-client-python/issues"
 Changelog = "https://github.com/kamu-data/kamu-client-python/blob/master/CHANGELOG.md"
