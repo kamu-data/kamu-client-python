@@ -11,7 +11,7 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
-## [Unreleased]
+## [0.2.0] - 2024-12-18
 ### Added
 - Spark engine support via Livy HTTP gateway (not for production)
 - Hidden different connection implementations behind `KamuConnection` interface
