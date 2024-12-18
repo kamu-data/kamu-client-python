@@ -1,24 +1,19 @@
-import contextlib
-import sys
+class KamuConnection:
+    """
+    Base interface all connections implement
+    """
 
-import adbc_driver_flightsql.dbapi
-import adbc_driver_manager
+    def url(self):
+        """
+        Returns the URL this connection was created with
+        """
+        raise NotImplementedError()
 
-
-class KamuConnection(contextlib.ExitStack):
-    def __init__(self, url):
-        super().__init__()
-
-        self.url = url
-
-        self._adbc = adbc_driver_flightsql.dbapi.connect(
-            self.url,
-            db_kwargs={
-                adbc_driver_manager.DatabaseOptions.USERNAME.value: "kamu",
-                adbc_driver_manager.DatabaseOptions.PASSWORD.value: "kamu",
-            },
-            autocommit=True,
-        )
+    def query(self, sql):
+        """
+        Execute SQL query and return result as Pandas DataFrame.
+        """
+        raise NotImplementedError()
 
     def as_adbc(self):
         """
@@ -34,18 +29,16 @@ class KamuConnection(contextlib.ExitStack):
         >>> with kamu.connect() as con:
         >>>     pandas.read_sql("select 1", con.as_adbc())
         """
-        return self._adbc
+        raise NotImplementedError()
 
     def __enter__(self):
-        super().__enter__()
-
-        try:
-            self.enter_context(self._adbc)
-        except:
-            if not self.__exit__(*sys.exc_info()):
-                raise
-
-        return self
+        pass
 
     def __exit__(self, exc_type, exc_value, traceback):
-        super().__exit__(exc_type, exc_value, traceback)
+        pass
+
+    def close(self):
+        """
+        Close the connection and release all resources
+        """
+        pass

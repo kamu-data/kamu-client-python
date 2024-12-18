@@ -60,6 +60,8 @@ jeepney==0.8.0
     #   secretstorage
 keyring==25.5.0
     # via twine
+livy==0.8.0
+    # via kamu (pyproject.toml)
 markdown-it-py==3.0.0
     # via rich
 mccabe==0.7.0
@@ -74,7 +76,7 @@ more-itertools==10.5.0
     #   jaraco-functools
 mypy-extensions==1.0.0
     # via black
-nh3==0.2.19
+nh3==0.2.20
     # via readme-renderer
 numpy==2.2.0
     # via pandas
@@ -85,7 +87,9 @@ packaging==24.2
     #   pytest
     #   twine
 pandas==2.2.3
-    # via kamu (pyproject.toml)
+    # via
+    #   kamu (pyproject.toml)
+    #   livy
 pathspec==0.12.1
     # via black
 pip-tools==7.4.1
@@ -127,6 +131,7 @@ readme-renderer==44.0
 requests==2.32.3
     # via
     #   docker
+    #   livy
     #   requests-toolbelt
     #   twine
 requests-toolbelt==1.0.0

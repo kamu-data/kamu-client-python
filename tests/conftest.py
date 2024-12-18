@@ -7,7 +7,7 @@ import pytest
 
 
 @dataclass
-class KamuContainer:
+class Server:
     port: int
     url: str
 
@@ -15,7 +15,7 @@ class KamuContainer:
         while True:
             try:
                 s = socket.create_connection(
-                    address=("localhost", self.port),
+                    address=("127.0.0.1", self.port),
                     timeout=0.1,
                 )
             except Exception:
@@ -23,7 +23,12 @@ class KamuContainer:
                 continue
 
             s.settimeout(1)
-            read = s.recv(1)
+
+            try:
+                read = s.recv(1)
+            except TimeoutError:
+                break
+
             s.close()
 
             if len(read):
@@ -33,10 +38,13 @@ class KamuContainer:
 
 
 @pytest.fixture(scope="module")
-def container_mt():
-    client = docker.from_env()
+def docker_client():
+    return docker.from_env()
 
-    container = client.containers.run(
+
+@pytest.fixture(scope="module")
+def server_flightsql_mt(docker_client):
+    container = docker_client.containers.run(
         image="ghcr.io/kamu-data/kamu-base:latest-with-data-mt",
         command="kamu -vv sql server --flight-sql --address 0.0.0.0 --port 50050",
         auto_remove=True,
@@ -48,8 +56,48 @@ def container_mt():
     container.reload()
     port = container.ports["50050/tcp"][0]["HostPort"]
 
-    kamu_container = KamuContainer(port=port, url=f"grpc://localhost:{port}")
-    kamu_container.wait_for_port()
-    yield kamu_container
+    server = Server(port=port, url=f"grpc://127.0.0.1:{port}")
+    server.wait_for_port()
+    yield server
 
     container.kill()
+
+
+@pytest.fixture(scope="module")
+def server_livy_st():
+    import subprocess
+
+    port = 50050
+
+    proc = subprocess.Popen(
+        f"kamu -vv sql server --livy --port {port}",
+        shell=True,
+        cwd="../kamu-cli/examples/covid",
+    )
+
+    server = Server(port=port, url=f"http://127.0.0.1:{port}")
+    server.wait_for_port()
+    yield server
+
+    proc.terminate()
+    proc.wait()
+
+
+@pytest.fixture(scope="module")
+def server_livy_mt():
+    import subprocess
+
+    port = 50051
+
+    proc = subprocess.Popen(
+        f"kamu -vv sql server --livy --port {port}",
+        shell=True,
+        cwd="../kamu-cli/examples/covid-mt",
+    )
+
+    server = Server(port=port, url=f"http://127.0.0.1:{port}")
+    server.wait_for_port()
+    yield server
+
+    proc.terminate()
+    proc.wait()

@@ -1,10 +1,9 @@
-from . import _connection
-
+from ._connection import KamuConnection
 
 __version__ = "0.1.2"
 
 
-def connect(url):
+def connect(url, engine=None):
     """
     Open connection to a Kamu node.
 
@@ -20,4 +19,14 @@ def connect(url):
     >>> with kamu.connect("grpc://localhost:50050") as con:
     >>>     pass
     """
-    return _connection.KamuConnection(url=url)
+    engine = (engine or "datafusion").lower()
+    if engine == "datafusion":
+        from . import _connection_flight_sql
+
+        return _connection_flight_sql.KamuConnectionFlightSql(url=url)
+    elif engine == "spark":
+        from . import _connection_livy
+
+        return _connection_livy.KamuConnectionLivy(url=url)
+    else:
+        raise NotImplementedError(f"Engine '{engine}' is not supported")

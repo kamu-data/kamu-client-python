@@ -11,6 +11,12 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [Unreleased]
+### Added
+- Spark engine support via Livy HTTP gateway (not for production)
+- Hidden different connection implementations behind `KamuConnection` interface
+- `KamuConnection.query(sql)` helper method
+
 ## [0.1.2] - 2024-12-16
 ### Added
 - Keeping a CHANGELOG

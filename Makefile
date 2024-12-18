@@ -47,6 +47,7 @@ deps: deps-compile deps-sync
 
 .PHONY: build
 build:
+	rm -rf dist
 	python -m build
 	twine check dist/*
 

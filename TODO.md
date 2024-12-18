@@ -1,2 +1,8 @@
+- Implement `repr` for connection
+- Default URL to demo env
 - Set sane default connection timeouts
+- Ability to query at specific block
 - CI actions
+- Async interface
+- Generate API documentation and embed into docs portal
+- Consider connecting to ODF HTTP and discovering engine URLs instead of connecting directly

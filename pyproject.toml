@@ -41,6 +41,7 @@ version = { attr = "kamu.__version__" }
 
 
 [project.optional-dependencies]
+spark = ["livy"]
 dev = [
     "black",
     "build",
