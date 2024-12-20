@@ -1,7 +1,31 @@
+import logging
+import os
+import re
+
 import livy
-import pandas
 
 from ._connection import KamuConnection
+
+_logger = logging.getLogger(__package__)
+
+
+def _maybe_int(value):
+    if value:
+        return int(value)
+    return None
+
+
+LIVY_DEFAULT_SESSION_PARAMS = {
+    "executor_cores": _maybe_int(os.environ.get("KAMU_CLIENT_LIVY_EXECUTOR_CORES")),
+    "executor_memory": os.environ.get("KAMU_CLIENT_LIVY_EXECUTOR_MEMORY"),
+    "driver_cores": _maybe_int(os.environ.get("KAMU_CLIENT_LIVY_DRIVER_CORES")),
+    "driver_memory": os.environ.get("KAMU_CLIENT_LIVY_DRIVER_MEMORY"),
+    "heartbeat_timeout": _maybe_int(
+        os.environ.get("KAMU_CLIENT_LIVY_HEARTBEAT_TIMEOUT")
+    ),
+}
+
+UNRESOLVED_TABLE_RE = re.compile(r"UnresolvedRelation \[([^\]]+)\],")
 
 SESSION_SETUP = r"""
 import os
@@ -45,11 +69,21 @@ class KamuConnectionLivy(KamuConnection):
     Livy gateway will be replaced in the near future with ADBC + FlightSQL based implementation.
     """
 
-    def __init__(self, url):
+    def __init__(self, url, auto_import_datasets=True, **livy_session_params):
         super().__init__()
 
+        self._auto_import_datasets = auto_import_datasets
+
+        livy_session_params_final = dict(LIVY_DEFAULT_SESSION_PARAMS)
+        livy_session_params_final.update(livy_session_params)
+
+        _logger.debug(
+            "Creating Livy connection",
+            extra={"url": url, "livy_session_params": livy_session_params_final},
+        )
+
         self._url = url
-        self._livy = livy.LivySession.create(self._url)
+        self._livy = livy.LivySession.create(self._url, **livy_session_params_final)
         self._livy.wait()
         self._livy.run(SESSION_SETUP)
 
@@ -63,12 +97,22 @@ class KamuConnectionLivy(KamuConnection):
             return self._livy.download("_df")
         except livy.models.SparkRuntimeError as err:
             # Catch "table does not exist" errors
-            table = self._is_table_not_found_error(err)
-            if not table:
+            if not self._auto_import_datasets or not self._is_table_not_found_error(
+                err
+            ):
                 raise
+            datasets = self._parse_unresolved_tables(err)
 
-        # Attempt to import dataset corresponding to missing table's name
-        self._import_dataset(table)
+        # Attempt to import dataset corresponding to missing table names
+        _logger.debug(
+            "Attempt to import dataset corresponding to missing table names",
+            extra={"datasets": datasets},
+        )
+
+        for dataset in datasets:
+            self._import_dataset(dataset)
+
+        # Re-run the original query
         self._livy.run(f"_df = spark.sql(r'''{sql}''')")
         return self._livy.download("_df")
 
@@ -87,14 +131,14 @@ class KamuConnectionLivy(KamuConnection):
     def close(self):
         self._livy.close()
 
-    def _is_table_not_found_error(self, err) -> str:
-        if err.ename != "AnalysisException" or not err.evalue.startswith(
-            "[TABLE_OR_VIEW_NOT_FOUND]"
-        ):
-            return None
-        s = err.evalue.find("`")
-        e = err.evalue.rfind("`")
-        return err.evalue[s + 1 : e]
+    def _is_table_not_found_error(self, err):
+        return (
+            err.ename == "AnalysisException"
+            and "[TABLE_OR_VIEW_NOT_FOUND]" in err.evalue
+        )
+
+    def _parse_unresolved_tables(self, err):
+        return [m.group(1) for m in UNRESOLVED_TABLE_RE.finditer(err.evalue)]
 
     def _import_dataset(self, name):
         self._livy.run(

@@ -1,21 +1,25 @@
+import adbc_driver_manager.dbapi
+import pandas
+
+
 class KamuConnection:
     """
     Base interface all connections implement
     """
 
-    def url(self):
+    def url(self) -> str:
         """
         Returns the URL this connection was created with
         """
         raise NotImplementedError()
 
-    def query(self, sql):
+    def query(self, sql) -> pandas.DataFrame:
         """
         Execute SQL query and return result as Pandas DataFrame.
         """
         raise NotImplementedError()
 
-    def as_adbc(self):
+    def as_adbc(self) -> adbc_driver_manager.dbapi.Connection:
         """
         Returns the underlying ADBC connection.
 
