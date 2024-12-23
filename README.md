@@ -5,7 +5,7 @@
 [Website] | [Docs] | [Demo] | [Tutorials] | [Examples] | [FAQ] | [Chat]
 
 [![Crates.io](https://img.shields.io/pypi/v/kamu?logo=python&logoColor=white&style=for-the-badge
-)](https://crates.io/crates/dill)
+)](https://pypi.org/project/kamu/)
 [![Docs](https://img.shields.io/static/v1?logo=gitbook&logoColor=white&label=&message=Docs&color=gray&style=for-the-badge)](https://docs.kamu.dev/)
 [![Chat](https://shields.io/discord/898726370199359498?style=for-the-badge&logo=discord&label=Discord)](https://discord.gg/nU6TXRQNXC)
 
