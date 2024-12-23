@@ -87,6 +87,9 @@ class KamuConnectionLivy(KamuConnection):
         self._livy.wait()
         self._livy.run(SESSION_SETUP)
 
+    def __repr__(self):
+        return f"KamuConnectionLivy(url='{self._url}')"
+
     def url(self):
         return self._url
 

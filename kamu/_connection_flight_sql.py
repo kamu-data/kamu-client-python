@@ -24,6 +24,9 @@ class KamuConnectionFlightSql(KamuConnection):
             autocommit=True,
         )
 
+    def __repr__(self):
+        return f"KamuConnectionFlightSql(url='{self._url}')"
+
     def url(self):
         return self._url
 

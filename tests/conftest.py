@@ -89,15 +89,15 @@ def server_livy_mt():
 
     port = 50051
 
-    # proc = subprocess.Popen(
-    #     f"kamu -vv sql server --livy --port {port}",
-    #     shell=True,
-    #     cwd="../kamu-cli/examples/covid-mt",
-    # )
+    proc = subprocess.Popen(
+        f"kamu -vv sql server --livy --port {port}",
+        shell=True,
+        cwd="../kamu-cli/examples/covid-mt",
+    )
 
     server = Server(port=port, url=f"http://127.0.0.1:{port}")
-    # server.wait_for_port()
+    server.wait_for_port()
     yield server
 
-    # proc.terminate()
-    # proc.wait()
+    proc.terminate()
+    proc.wait()

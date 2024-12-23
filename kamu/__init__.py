@@ -2,7 +2,7 @@ import os
 
 from ._connection import KamuConnection
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 
 def connect(url=None, engine=None, connection_config=None) -> KamuConnection:
@@ -41,3 +41,12 @@ def connect(url=None, engine=None, connection_config=None) -> KamuConnection:
         return _connection_livy.KamuConnectionLivy(url=url, **connection_config)
 
     raise ValueError(f"Engine '{engine}' is not supported")
+
+
+def load_ipython_extension(ipython):
+    """
+    Called when running `%load_ext kamu` in Jupyter / IPython.
+    """
+    from . import _jupyter
+
+    ipython.register_magics(_jupyter.KamuMagics)

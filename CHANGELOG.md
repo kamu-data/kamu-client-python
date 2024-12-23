@@ -11,6 +11,10 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [0.3.0] - 2024-12-23
+### Added
+- Jupyter extension that provides a convenience `%%sql` cell magic
+
 ## [0.2.0] - 2024-12-18
 ### Added
 - Spark engine support via Livy HTTP gateway (not for production)
