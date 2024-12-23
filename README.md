@@ -1,4 +1,22 @@
-# Kamu client library for Python
+<div align="center">
+
+<img alt="Kamu: Planet-scale data pipeline" src="https://raw.githubusercontent.com/kamu-data/kamu-client-python/refs/heads/master/docs/readme-files/kamu_logo.png" width=300/>
+
+[Website] | [Docs] | [Demo] | [Tutorials] | [Examples] | [FAQ] | [Chat]
+
+[![Crates.io](https://img.shields.io/pypi/v/kamu?logo=python&logoColor=white&style=for-the-badge
+)](https://crates.io/crates/dill)
+[![Docs](https://img.shields.io/static/v1?logo=gitbook&logoColor=white&label=&message=Docs&color=gray&style=for-the-badge)](https://docs.kamu.dev/)
+[![Chat](https://shields.io/discord/898726370199359498?style=for-the-badge&logo=discord&label=Discord)](https://discord.gg/nU6TXRQNXC)
+
+
+</p>
+</div>
+
+## About
+Python client library for Kamu.
+
+Start with [`kamu-cli`](https://github.com/kamu-data/kamu-cli) repo if you are not familiar with the project.
 
 ## Installing
 Install the library:
@@ -103,4 +121,17 @@ select * from x
 
 The `kamu` extension automatically registers [`autovizwidget`](https://github.com/jupyter-incubator/sparkmagic) to offer some options to visualize your data frames.
 
-![Jupyter extension](docs/readme-files/jupyter.png)
+![Jupyter extension](https://raw.githubusercontent.com/kamu-data/kamu-client-python/refs/heads/master/docs/readme-files/jupyter.png)
+
+
+
+[Tutorials]: https://docs.kamu.dev/cli/learn/learning-materials/
+[Examples]: https://docs.kamu.dev/cli/learn/examples/
+[Docs]: https://docs.kamu.dev/welcome/
+[Demo]: https://demo.kamu.dev/
+[FAQ]: https://docs.kamu.dev/cli/get-started/faq/
+[Chat]: https://discord.gg/nU6TXRQNXC
+[Contributing]: https://docs.kamu.dev/contrib/
+[Developer Guide]: ./DEVELOPER.md
+[License]: https://docs.kamu.dev/contrib/license/
+[Website]: https://kamu.dev
