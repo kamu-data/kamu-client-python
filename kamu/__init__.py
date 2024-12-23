@@ -50,3 +50,17 @@ def load_ipython_extension(ipython):
     from . import _jupyter
 
     ipython.register_magics(_jupyter.KamuMagics)
+
+    try:
+        import autovizwidget.widget.utils
+
+        autoviz = autovizwidget.widget.utils.display_dataframe
+    except ImportError:
+        autoviz = None
+
+    if autoviz:
+        ipython.display_formatter.ipython_display_formatter.for_type_by_name(
+            "pandas.core.frame",
+            "DataFrame",
+            autoviz,
+        )

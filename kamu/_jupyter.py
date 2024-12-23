@@ -17,7 +17,7 @@ class KamuMagics(Magics):
         "-c",
         "--connection",
         type=str,
-        default="con",
+        default=None,
         help="Variable name that holds KamuConnection",
     )
     @magic_arguments.argument(
@@ -45,12 +45,19 @@ class KamuMagics(Magics):
     )
     def sql(self, line, cell, local_ns=None):
         args = magic_arguments.parse_argstring(self.sql, line)
-        print("Args:", args)
 
-        connection = local_ns.get(args.connection)
+        # Get connection object
+        if args.connection:
+            connection = local_ns.get(args.connection)
+        else:
+            for var_name in ["con", "conn", "connection"]:
+                connection = local_ns.get(var_name)
+                if isinstance(connection, KamuConnection):
+                    break
+
         if not connection:
             raise ValueError(
-                "KamuConnection not found, please provide -c <connection> argument"
+                "Active KamuConnection not found, please provide -c <connection> argument"
             )
         if not isinstance(connection, KamuConnection):
             raise ValueError(
@@ -58,13 +65,10 @@ class KamuMagics(Magics):
             )
 
         sql = cell.strip()
-
-        print("SQL:", sql)
-        print("Conn:", connection)
-
         df = connection.query(sql)
 
         if args.output:
             local_ns[args.output] = df
-        elif not args.quiet:
+
+        if not args.quiet:
             return df

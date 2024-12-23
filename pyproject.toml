@@ -41,6 +41,8 @@ version = { attr = "kamu.__version__" }
 
 
 [project.optional-dependencies]
+jupyter-autoviz = ["autovizwidget"]
+jupyter-sql = []
 spark = ["livy"]
 dev = [
     "black",

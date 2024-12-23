@@ -1,14 +1,23 @@
 # Kamu client library for Python
 
-## Install
-
+## Installing
+Install the library:
 ```bash
 pip install kamu
 ```
 
-## Use
-Quick start:
+Consider installing with extra features:
+```bash
+pip install kamu[jupyter-autoviz,jupyter-sql,spark]
+```
 
+### Extras
+- `jupyter-autoviz`- Jupyter auto-viz for Pandas data frames
+- `jupyter-sql` - Jupyter `%%sql` cell magic
+- `spark` - extra libraries temporarily required to communicate with Spark engine
+
+
+## Using in plain Python scripts
 ```python
 import kamu
 
@@ -41,3 +50,57 @@ df = pandas.read_sql_query(
     con.as_adbc(),
 )
 ```
+
+
+## Using in Jupyter
+Load the extension in your notebook:
+
+```python
+%load_ext kamu
+```
+
+Create connection:
+
+```python
+con = kamu.connect("grpc+tls://node.demo.kamu.dev:50050")
+```
+
+Extension provides a convenience `%%sql` magic:
+
+```sql
+%%sql
+select
+    event_time, open, close, volume
+from 'kamu/co.alphavantage.tickers.daily.spy'
+where from_symbol = 'spy' and to_symbol = 'usd'
+order by event_time
+```
+
+The above is equivalent to:
+
+```python
+con.query("...")
+```
+
+To save the query result into a variable use:
+```sql
+%%sql -o df
+select * from x
+```
+
+The above is equivalent to:
+
+```python
+df = con.query("...")
+df
+```
+
+To silence the output add `-q`:
+```sql
+%%sql -o df -q
+select * from x
+```
+
+The `kamu` extension automatically registers [`autovizwidget`](https://github.com/jupyter-incubator/sparkmagic) to offer some options to visualize your data frames.
+
+![Jupyter extension](docs/readme-files/jupyter.png)
