@@ -11,6 +11,10 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [0.4.1] - 2024-12-23
+### Fixed
+- Corrected links in readme
+
 ## [0.4.0] - 2024-12-23
 ### Added
 - Jupyter extension auto-registers the `autovizwidget` to visualize Pandas dataframes
