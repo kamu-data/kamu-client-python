@@ -55,6 +55,8 @@ df = con.query(
 print(df)
 ```
 
+By default the connection will use `DataFusion` engine with Postgres-like SQL dialect.
+
 The client library is based on modern [ADBC](https://arrow.apache.org/docs/format/ADBC.html) standard and the underlying connection can be used directly with other libraries supporting ADBC data sources:
 
 ```python
@@ -123,6 +125,28 @@ The `kamu` extension automatically registers [`autovizwidget`](https://github.co
 
 ![Jupyter extension](https://raw.githubusercontent.com/kamu-data/kamu-client-python/refs/heads/master/docs/readme-files/jupyter.png)
 
+
+## Using with Spark
+You can specify a different engine when connecting:
+
+```python
+con = kamu.connect("http://livy:8888", engine="spark")
+```
+
+Note that currently Spark connectivity relies on Livy HTTP gateway but in future will be unified under ADBC.
+
+You can also provide extra configuration to the connection:
+
+```python
+con = kamu.connect(
+    "http://livy:8888",
+    engine="spark",
+    connection_params=dict(
+        driver_memory="1000m",
+        executor_memory="2000m",
+    ),
+)
+```
 
 
 [Tutorials]: https://docs.kamu.dev/cli/learn/learning-materials/

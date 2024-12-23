@@ -11,6 +11,10 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [0.4.2] - 2024-12-23
+### Changed
+- Improved readme
+
 ## [0.4.1] - 2024-12-23
 ### Fixed
 - Corrected links in readme
