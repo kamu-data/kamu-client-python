@@ -11,6 +11,10 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [0.4.3] - 2024-12-23
+### Added
+- New `utils.df_to_geojson` function
+
 ## [0.4.2] - 2024-12-23
 ### Changed
 - Improved readme

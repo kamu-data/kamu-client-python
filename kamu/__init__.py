@@ -2,7 +2,7 @@ import os
 
 from ._connection import KamuConnection
 
-__version__ = "0.4.2"
+__version__ = "0.4.3"
 
 
 def connect(url=None, engine=None, connection_params=None) -> KamuConnection:
