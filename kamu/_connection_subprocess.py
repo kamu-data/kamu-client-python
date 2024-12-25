@@ -28,10 +28,10 @@ class KamuConnectionSubprocess(KamuConnection):
     ):
         super().__init__()
 
-        assert url.startswith("file://")
         self._url = url
 
-        cwd = url[len("file://") :]
+        assert url.startswith("file://")
+        cwd = url[len("file://") :] or "."
 
         # Start and wait for subprocess
         self._proc = KamuSqlServerProcess(
@@ -90,8 +90,8 @@ class KamuSqlServerProcess:
 
         self._port = self.find_free_port()
 
-        stdout = self.get_temp_file("kamu-client-supbrocess", ".stdout.txt")
-        stderr = self.get_temp_file("kamu-client-supbrocess", ".stderr.txt")
+        stdout = self.get_temp_file("kamu-client-supbrocess-", ".stdout.txt")
+        stderr = self.get_temp_file("kamu-client-supbrocess-", ".stderr.txt")
 
         cmd = [
             bin,
@@ -130,8 +130,8 @@ class KamuSqlServerProcess:
                 raise Exception(
                     f"Kamu failed to start with status code: {status}\n"
                     f"See logs for details:\n"
-                    f"- {stdout}\n"
-                    f"- {stderr}"
+                    f"- {stdout.name}\n"
+                    f"- {stderr.name}"
                 )
             except subprocess.TimeoutExpired:
                 pass
@@ -145,8 +145,8 @@ class KamuSqlServerProcess:
                 raise Exception(
                     f"Kamu failed to start within {start_timeout} seconds\n"
                     f"See logs for details:\n"
-                    f"- {stdout}\n"
-                    f"- {stderr}"
+                    f"- {stdout.name}\n"
+                    f"- {stderr.name}"
                 )
 
     def port(self):

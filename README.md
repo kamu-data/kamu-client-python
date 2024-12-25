@@ -135,6 +135,8 @@ con = kamu.connect("file:///path/to/workspace")
 
 This will automatically start a `kamu sql server` sub-process and connect to it using an appropriate protocol.
 
+Use `file://` to start the server in the current directory.
+
 
 ## Using with Spark
 You can specify a different engine when connecting:

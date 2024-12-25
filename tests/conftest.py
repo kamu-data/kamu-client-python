@@ -23,7 +23,7 @@ class Server:
 
 @pytest.fixture
 def tempdir():
-    d = tempfile.TemporaryDirectory("kamu-client-test", delete=True)
+    d = tempfile.TemporaryDirectory("kamu-client-test-", delete=True)
     yield d.name
 
 
