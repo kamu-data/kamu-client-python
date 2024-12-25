@@ -1,5 +1,3 @@
-- Implement `repr` for connection
-- Default URL to demo env
 - Set sane default connection timeouts
 - Ability to query at specific block
 - CI actions

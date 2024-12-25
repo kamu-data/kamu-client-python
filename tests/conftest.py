@@ -1,103 +1,62 @@
-import socket
-import time
+import os
+import pathlib
+import subprocess
+import tempfile
 from dataclasses import dataclass
+from textwrap import dedent
 
-import docker
 import pytest
+
+
+@dataclass
+class Workspace:
+    path: str
+    url: str
 
 
 @dataclass
 class Server:
     port: int
     url: str
-
-    def wait_for_port(self):
-        while True:
-            try:
-                s = socket.create_connection(
-                    address=("127.0.0.1", self.port),
-                    timeout=0.1,
-                )
-            except Exception:
-                time.sleep(0.1)
-                continue
-
-            s.settimeout(1)
-
-            try:
-                read = s.recv(1)
-            except TimeoutError:
-                break
-
-            s.close()
-
-            if len(read):
-                break
-
-            time.sleep(0.1)
+    workspace: Workspace
 
 
-@pytest.fixture(scope="module")
-def docker_client():
-    return docker.from_env()
+@pytest.fixture
+def tempdir():
+    d = tempfile.TemporaryDirectory("kamu-client-test", delete=True)
+    yield d.name
 
 
-@pytest.fixture(scope="module")
-def server_flightsql_mt(docker_client):
-    container = docker_client.containers.run(
-        image="ghcr.io/kamu-data/kamu-base:latest-with-data-mt",
-        command="kamu -vv sql server --flight-sql --address 0.0.0.0 --port 50050",
-        auto_remove=True,
-        remove=True,
-        ports={"50050/tcp": None},
-        detach=True,
+@pytest.fixture
+def workspace_st(tempdir):
+    subprocess.run(
+        "kamu init", cwd=tempdir, shell=True, capture_output=True, check=True
     )
-
-    container.reload()
-    port = container.ports["50050/tcp"][0]["HostPort"]
-
-    server = Server(port=port, url=f"grpc://127.0.0.1:{port}")
-    server.wait_for_port()
-    yield server
-
-    container.kill()
+    yield Workspace(path=tempdir, url=pathlib.Path(tempdir).as_uri())
 
 
-@pytest.fixture(scope="module")
-def server_livy_st():
-    import subprocess
-
-    port = 50050
-
-    proc = subprocess.Popen(
-        f"kamu -vv sql server --livy --port {port}",
+@pytest.fixture
+def workspace_mt(tempdir):
+    subprocess.run(
+        "kamu init --multi-tenant",
+        cwd=tempdir,
         shell=True,
-        cwd="../kamu-cli/examples/covid",
+        capture_output=True,
+        check=True,
     )
-
-    server = Server(port=port, url=f"http://127.0.0.1:{port}")
-    server.wait_for_port()
-    yield server
-
-    proc.terminate()
-    proc.wait()
-
-
-@pytest.fixture(scope="module")
-def server_livy_mt():
-    import subprocess
-
-    port = 50051
-
-    proc = subprocess.Popen(
-        f"kamu -vv sql server --livy --port {port}",
-        shell=True,
-        cwd="../kamu-cli/examples/covid-mt",
-    )
-
-    server = Server(port=port, url=f"http://127.0.0.1:{port}")
-    server.wait_for_port()
-    yield server
-
-    proc.terminate()
-    proc.wait()
+    with open(os.path.join(tempdir, ".kamu", ".kamuconfig"), "w") as f:
+        f.write(
+            dedent(
+                """
+                kind: CLIConfig
+                version: 1
+                content:
+                  users:
+                    predefined:
+                      - accountName: kamu
+                        isAdmin: true
+                        avatarUrl: https://avatars.githubusercontent.com/u/50896974?s=200&v=4
+                """
+            )
+        )
+    yield Workspace(path=tempdir, url=pathlib.Path(tempdir).as_uri())

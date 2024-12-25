@@ -45,4 +45,3 @@ class KamuConnection:
         """
         Close the connection and release all resources
         """
-        pass

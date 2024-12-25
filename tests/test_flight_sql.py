@@ -1,10 +1,32 @@
 import re
+import subprocess
 
 import adbc_driver_manager
 import pandas
 import pytest
 
 import kamu
+from kamu._connection_subprocess import KamuSqlServerProcess
+
+from .conftest import Server
+
+
+@pytest.fixture
+def server_flightsql_mt(workspace_mt):
+    proc = KamuSqlServerProcess(cwd=workspace_mt.path, engine="datafusion")
+    url = f"grpc://127.0.0.1:{proc.port()}"
+    yield Server(port=proc.port(), url=url, workspace=workspace_mt)
+    proc.stop()
+
+
+def pull_test_data(cwd):
+    subprocess.run(
+        "kamu --account kamu pull odf+https://node.demo.kamu.dev/kamu/covid19.british-columbia.case-details.hm",
+        cwd=cwd,
+        shell=True,
+        capture_output=True,
+        check=True,
+    )
 
 
 def test_version():
@@ -16,6 +38,11 @@ def test_version():
 def test_repr(server_flightsql_mt):
     with kamu.connect(server_flightsql_mt.url) as con:
         assert repr(con) == f"KamuConnectionFlightSql(url='{server_flightsql_mt.url}')"
+
+
+def test_url_scheme_check():
+    with pytest.raises(ValueError):
+        kamu.connect("https://example.com")
 
 
 def test_sql_query_minimal(server_flightsql_mt):
@@ -43,6 +70,8 @@ def test_query_pandas_interop(server_flightsql_mt):
 
 
 def test_query(server_flightsql_mt):
+    pull_test_data(server_flightsql_mt.workspace.path)
+
     with kamu.connect(server_flightsql_mt.url) as con:
         actual = con.query(
             """

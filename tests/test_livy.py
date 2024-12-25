@@ -1,10 +1,48 @@
-import re
+import subprocess
 
-import adbc_driver_manager
 import pandas
 import pytest
 
 import kamu
+from kamu._connection_subprocess import KamuSqlServerProcess
+
+from .conftest import Server
+
+
+@pytest.fixture
+def server_livy_st(workspace_st):
+    proc = KamuSqlServerProcess(cwd=workspace_st.path, engine="spark")
+    url = f"http://127.0.0.1:{proc.port()}"
+    yield Server(port=proc.port(), url=url, workspace=workspace_st)
+    proc.stop()
+
+
+@pytest.fixture
+def server_livy_mt(workspace_mt):
+    proc = KamuSqlServerProcess(cwd=workspace_mt.path, engine="spark")
+    url = f"http://127.0.0.1:{proc.port()}"
+    yield Server(port=proc.port(), url=url, workspace=workspace_mt)
+    proc.stop()
+
+
+def pull_test_data(cwd, account=None):
+    account = "" if not account else f"--account {account}"
+
+    subprocess.run(
+        f"kamu {account} pull odf+https://node.demo.kamu.dev/kamu/covid19.british-columbia.case-details.hm",
+        cwd=cwd,
+        shell=True,
+        capture_output=True,
+        check=True,
+    )
+
+    subprocess.run(
+        f"kamu {account} pull odf+https://node.demo.kamu.dev/kamu/covid19.alberta.case-details.hm",
+        cwd=cwd,
+        shell=True,
+        capture_output=True,
+        check=True,
+    )
 
 
 def test_repr(server_livy_st):
@@ -12,7 +50,14 @@ def test_repr(server_livy_st):
         assert repr(con) == f"KamuConnectionLivy(url='{server_livy_st.url}')"
 
 
+def test_url_scheme_check():
+    with pytest.raises(ValueError):
+        kamu.connect("grpc+tls://example.com", engine="spark")
+
+
 def test_query_st(server_livy_st):
+    pull_test_data(server_livy_st.workspace.path)
+
     with kamu.connect(server_livy_st.url, engine="spark") as con:
         actual = con.query(
             """
@@ -55,6 +100,8 @@ def test_query_st(server_livy_st):
 
 
 def test_query_mt(server_livy_mt):
+    pull_test_data(server_livy_mt.workspace.path, account="kamu")
+
     with kamu.connect(server_livy_mt.url, engine="spark") as con:
         actual = con.query(
             """

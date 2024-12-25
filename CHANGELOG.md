@@ -11,6 +11,10 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [0.5.0] - 2024-12-24
+### Added
+- Added support for `file://` URLs to automatically run a `kamu sql server` sub-process and serve data from a local workspace
+
 ## [0.4.3] - 2024-12-23
 ### Added
 - New `utils.df_to_geojson` function

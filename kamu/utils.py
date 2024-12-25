@@ -10,7 +10,7 @@ def df_to_geojson(df, geom="geometry"):
         "features": [
             {
                 "type": "Feature",
-                "geometry": json.loads(record.pop("geometry")),
+                "geometry": json.loads(record.pop(geom)),
                 "properties": record,
             }
             for record in json.loads(df.to_json(orient="records"))

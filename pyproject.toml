@@ -47,7 +47,6 @@ spark = ["livy"]
 dev = [
     "black",
     "build",
-    "docker",
     "flake8",
     "isort",
     "pandas",

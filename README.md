@@ -4,7 +4,7 @@
 
 [Website] | [Docs] | [Demo] | [Tutorials] | [Examples] | [FAQ] | [Chat]
 
-[![Crates.io](https://img.shields.io/pypi/v/kamu?logo=python&logoColor=white&style=for-the-badge
+[![Crates.io](https://img.shields.io/pypi/v/kamu?logo=python&style=for-the-badge
 )](https://pypi.org/project/kamu/)
 [![Docs](https://img.shields.io/static/v1?logo=gitbook&logoColor=white&label=&message=Docs&color=gray&style=for-the-badge)](https://docs.kamu.dev/)
 [![Chat](https://shields.io/discord/898726370199359498?style=for-the-badge&logo=discord&label=Discord)](https://discord.gg/nU6TXRQNXC)
@@ -124,6 +124,16 @@ select * from x
 The `kamu` extension automatically registers [`autovizwidget`](https://github.com/jupyter-incubator/sparkmagic) to offer some options to visualize your data frames.
 
 ![Jupyter extension](https://raw.githubusercontent.com/kamu-data/kamu-client-python/refs/heads/master/docs/readme-files/jupyter.png)
+
+
+## Servind data from a local Kamu workspace
+If you have [`kamu-cli`](https://github.com/kamu-data/kamu-cli) you can serve data directly from a local workspace like so:
+
+```python
+con = kamu.connect("file:///path/to/workspace")
+```
+
+This will automatically start a `kamu sql server` sub-process and connect to it using an appropriate protocol.
 
 
 ## Using with Spark
