@@ -69,7 +69,9 @@ class KamuConnectionLivy(KamuConnection):
     Livy gateway will be replaced in the near future with ADBC + FlightSQL based implementation.
     """
 
-    def __init__(self, url, auto_import_datasets=True, **livy_session_params):
+    def __init__(
+        self, url, token=None, auto_import_datasets=True, **livy_session_params
+    ):
         super().__init__()
 
         self._auto_import_datasets = auto_import_datasets

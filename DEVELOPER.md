@@ -21,4 +21,6 @@ nix shell github:GuillaumeDesforges/fix-python
 fix-python --venv .venv
 ```
 
+Note: this may take a few minutes.
+
 See [NixOS Wiki](https://wiki.nixos.org/wiki/Python#Running_compiled_libraries) for details.

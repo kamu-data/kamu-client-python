@@ -26,7 +26,7 @@ test:
 .PHONY: deps-compile
 deps-compile:
 	pip-compile \
-		--all-extras \
+		--extra dev --extra spark \
 		--upgrade \
 		--rebuild \
 		pyproject.toml

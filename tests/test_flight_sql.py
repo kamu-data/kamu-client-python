@@ -12,6 +12,14 @@ from .conftest import Server
 
 
 @pytest.fixture
+def server_flightsql_st(workspace_st):
+    proc = KamuSqlServerProcess(cwd=workspace_st.path, engine="datafusion")
+    url = f"grpc://127.0.0.1:{proc.port()}"
+    yield Server(port=proc.port(), url=url, workspace=workspace_st)
+    proc.stop()
+
+
+@pytest.fixture
 def server_flightsql_mt(workspace_mt):
     proc = KamuSqlServerProcess(cwd=workspace_mt.path, engine="datafusion")
     url = f"grpc://127.0.0.1:{proc.port()}"
@@ -45,7 +53,14 @@ def test_url_scheme_check():
         kamu.connect("https://example.com")
 
 
-def test_sql_query_minimal(server_flightsql_mt):
+def test_sql_query_minimal_st(server_flightsql_st):
+    with kamu.connect(server_flightsql_st.url) as con:
+        actual = con.query("select 1 as value")
+        expected = pandas.DataFrame({"value": [1]})
+        pandas.testing.assert_frame_equal(expected, actual)
+
+
+def test_sql_query_minimal_mt(server_flightsql_mt):
     with kamu.connect(server_flightsql_mt.url) as con:
         actual = con.query("select 1 as value")
         expected = pandas.DataFrame({"value": [1]})

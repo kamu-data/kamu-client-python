@@ -71,6 +71,15 @@ df = pandas.read_sql_query(
 )
 ```
 
+## Authentication
+You can supply an access token via `token` parameter:
+
+```python
+kamu.connect("grpc+tls://node.demo.kamu.dev:50050", token="<access-token>")
+```
+
+When token is not provided the library will authenticate as `anonymous` user. If node allows anonymous access the client will get a session token assigned during the handshake procedure and will use it for all subsequent requests.
+
 
 ## Using in Jupyter
 Load the extension in your notebook:

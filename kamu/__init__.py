@@ -2,12 +2,21 @@ import os
 
 from ._connection import KamuConnection
 
-__version__ = "0.5.1"
+__version__ = "0.6.0"
 
 
-def connect(url=None, engine=None, connection_params=None) -> KamuConnection:
+def connect(
+    url=None, token=None, engine=None, connection_params=None
+) -> KamuConnection:
     """
     Open connection to a Kamu node.
+
+    Arguments
+    ---------
+    - `url` - URL to connect to (e.g. `grpc+tls://kamu-node.example.com`)
+    - `token` - access token
+    - `engine` - engine type (e.g. `datafusion`, `spark`)
+    - `connection_params` - parameters to pass to the underlying connection type
 
     Examples
     --------
@@ -33,9 +42,12 @@ def connect(url=None, engine=None, connection_params=None) -> KamuConnection:
     if not url:
         raise ValueError("url is not specified")
 
+    token = token or os.environ.get("KAMU_CLIENT_TOKEN")
+
     engine = (engine or "datafusion").lower()
 
     connection_params = connection_params or {}
+    connection_params["token"] = token
 
     if url.startswith("file://"):
         from . import _connection_subprocess

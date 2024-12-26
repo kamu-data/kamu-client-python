@@ -1,6 +1,10 @@
 - Set sane default connection timeouts
+- Limit maxrows / add sampling by default (+ warning)
 - Ability to query at specific block
+- Search API
+- Push data API
 - CI actions
 - Async interface
 - Generate API documentation and embed into docs portal
 - Consider connecting to ODF HTTP and discovering engine URLs instead of connecting directly
+- Consider not allowing fully non-authenticated access and making anonymous users go through basic auth procedure so that server had a clear point to reject new client or apply backpressure. Upon auth the server would assign a temporary session token that can be used to identify the client and apply rate limiting strategies.

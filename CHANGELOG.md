@@ -11,6 +11,10 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [0.6.0] - 2024-12-26
+### Added
+- Basic and token-based authentication support
+
 ## [0.5.1] - 2024-12-24
 ### Fixed
 - Handle `file://` URL as current working directory
