@@ -1,0 +1,68 @@
+name: build
+on:
+  push:
+    paths:
+      - "**"
+      - "!docs/**"
+      - "!**.md"
+  # manual trigger
+  workflow_dispatch: { }
+jobs:
+  lint_fmt:
+    name: Lint / Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - run: make fmt
+
+      - name: Check formatting
+        run: git diff && git diff-index --quiet HEAD
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Python 3.9
+            runs-on: ubuntu-latest
+            python-version: '3.9'
+
+          - name: Python 3.13
+            runs-on: ubuntu-latest
+            python-version: '3.13'
+
+    name: Test / ${{ matrix.name }}
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install kamu
+        shell: bash
+        run: |
+          curl -s "https://get.kamu.dev" | sh
+      
+      - name: Print info
+        shell: bash
+        run: |
+          echo "Kamu version:"
+          kamu --version
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: make test
