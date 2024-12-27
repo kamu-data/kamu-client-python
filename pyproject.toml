@@ -25,7 +25,7 @@ keywords = [
     "ML",
 ]
 dependencies = ["adbc_driver_manager", "adbc_driver_flightsql", "pyarrow"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 
 [project.urls]

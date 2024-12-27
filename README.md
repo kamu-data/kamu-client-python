@@ -7,6 +7,7 @@
 [![Crates.io](https://img.shields.io/pypi/v/kamu?logo=python&style=for-the-badge
 )](https://pypi.org/project/kamu/)
 [![Docs](https://img.shields.io/static/v1?logo=gitbook&logoColor=white&label=&message=Docs&color=gray&style=for-the-badge)](https://docs.kamu.dev/)
+[![CI](https://img.shields.io/github/actions/workflow/status/kamu-data/kamu-client-python/build.yaml?logo=githubactions&label=CI&logoColor=white&style=for-the-badge&branch=master)](https://github.com/kamu-data/client-python/actions)
 [![Chat](https://shields.io/discord/898726370199359498?style=for-the-badge&logo=discord&label=Discord)](https://discord.gg/nU6TXRQNXC)
 
 
