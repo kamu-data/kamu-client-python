@@ -2,7 +2,7 @@ import os
 
 from ._connection import KamuConnection
 
-__version__ = "0.6.0"
+__version__ = "0.6.1"
 
 
 def connect(
@@ -44,7 +44,7 @@ def connect(
 
     token = token or os.environ.get("KAMU_CLIENT_TOKEN")
 
-    engine = (engine or "datafusion").lower()
+    engine = (engine or os.environ.get("KAMU_CLIENT_ENGINE", "datafusion")).lower()
 
     connection_params = connection_params or {}
     connection_params["token"] = token
