@@ -14,6 +14,17 @@
 </p>
 </div>
 
+- [About](#about)
+- [Installing](#installing)
+  - [Extras](#extras)
+- [Using in plain Python scripts](#using-in-plain-python-scripts)
+- [Authentication](#authentication)
+- [Using in Jupyter](#using-in-jupyter)
+  - [Other Notebook Environmnets](#other-notebook-environmnets)
+- [Serving data from a local Kamu workspace](#serving-data-from-a-local-kamu-workspace)
+- [Using with Spark](#using-with-spark)
+
+
 ## About
 Python client library for Kamu.
 
@@ -136,7 +147,13 @@ The `kamu` extension automatically registers [`autovizwidget`](https://github.co
 ![Jupyter extension](https://raw.githubusercontent.com/kamu-data/kamu-client-python/refs/heads/master/docs/readme-files/jupyter.png)
 
 
-## Servind data from a local Kamu workspace
+### Other Notebook Environmnets
+This library should work with most Python-based notebook environments.
+
+Here's an example [Google Colab Notebook](https://colab.research.google.com/drive/1WQqZJsPQpipU4kW6SPea9H2qmHH4rF8k).
+
+
+## Serving data from a local Kamu workspace
 If you have [`kamu-cli`](https://github.com/kamu-data/kamu-cli) you can serve data directly from a local workspace like so:
 
 ```python
