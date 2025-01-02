@@ -59,7 +59,14 @@ jobs:
         shell: bash
         run: |
           echo "Kamu version:"
-          kamu --version
+          kamu version
+
+          echo "Podman version:"
+          podman version
+
+      - name: Pull images
+        run: |
+          kamu init --pull-images --list-only | grep kamu-data/engine-spark | xargs podman pull
       
       - name: Install dependencies
         run: pip install -r requirements.txt
