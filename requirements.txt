@@ -100,7 +100,7 @@ platformdirs==4.3.6
     #   pylint
 pluggy==1.5.0
     # via pytest
-pyarrow==18.1.0
+pyarrow==19.0.0
     # via kamu (pyproject.toml)
 pycodestyle==2.12.1
     # via flake8
@@ -147,7 +147,7 @@ twine==6.0.1
     # via kamu (pyproject.toml)
 typing-extensions==4.12.2
     # via adbc-driver-manager
-tzdata==2024.2
+tzdata==2025.1
     # via pandas
 urllib3==2.3.0
     # via
