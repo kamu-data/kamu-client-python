@@ -56,6 +56,7 @@ def workspace_mt(tempdir):
                       - accountName: kamu
                         isAdmin: true
                         avatarUrl: https://avatars.githubusercontent.com/u/50896974?s=200&v=4
+                        email: support+kamu@kamu.dev
                 """
             )
         )
