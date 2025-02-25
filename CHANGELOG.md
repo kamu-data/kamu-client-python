@@ -11,6 +11,10 @@ Recommendation: for ease of reading, use the following order:
 - Fixed
 -->
 
+## [0.7.0] - 2025-02-25
+### Added
+- Support V6 layout of Kamu workspaces
+
 ## [0.6.1] - 2024-12-30
 ### Added
 - Ability to specify engine version via an environment variable

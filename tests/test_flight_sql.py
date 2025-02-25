@@ -29,7 +29,7 @@ def server_flightsql_mt(workspace_mt):
 
 def pull_test_data(cwd):
     subprocess.run(
-        "kamu --account kamu pull odf+https://node.demo.kamu.dev/kamu/covid19.british-columbia.case-details.hm",
+        "kamu --account kamu pull odf+https://node.demo.kamu.dev/kamu/covid19.british-columbia.case-details.hm --visibility public",
         cwd=cwd,
         shell=True,
         capture_output=True,
