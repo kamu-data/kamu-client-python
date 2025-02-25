@@ -33,28 +33,26 @@ import os
 # spark.sparkContext._jvm.org.datasyslab.geosparksql.utils.GeoSparkSQLRegistrator.registerAll(sc._jvm.SQLContext(sc._jsc.sc()))
 
 def resolve_dataset_ref(dataset_ref):
-    if "/" not in dataset_ref:
-        # Single-tenant
-        data_path = os.path.join(dataset_ref, "data")
-        if os.path.exists(data_path):
-            return os.path.join(data_path, "*")
-    else:
-        # Multi-tenant
-        # Assumptions:
-        # - Layout of the data directory is `<account_name>/<dataset_id>/info/alias`
-        # - Alias file contains `<account_name>/<dataset_name>`
-        #   - Note there is a bug where alias may conain just `<dataset_name>` so we account for that too
+    # Assumptions:
+    # - Layout of the data directory is `<dataset_id>/info/alias`
+    # - Alias file contains `<account_name>/<dataset_name>`
+    #   - Note there is a bug where alias may conain just `<dataset_name>` so we account for that too
+    account_name: str | None = None
+    dataset_name: str
+    if "/" in dataset_ref:
         account_name, dataset_name = dataset_ref.split("/", 1)
-        if os.path.isdir(account_name):
-            for dataset_id in os.listdir(account_name):
-                alias_path = os.path.join(account_name, dataset_id, "info", "alias")
-                if not os.path.exists(alias_path):
-                    continue
-                with open(alias_path) as f:
-                    alias = f.read().strip()
-                if alias != dataset_ref and alias != dataset_name:
-                    continue
-                return os.path.join(account_name, dataset_id, "data", "*")
+    else:
+        dataset_name = dataset_ref
+
+    for dataset_id in os.listdir("."):
+        alias_path = os.path.join(dataset_id, "info", "alias")
+        if not os.path.exists(alias_path):
+            continue
+        with open(alias_path) as f:
+            alias = f.read().strip()
+        if alias != dataset_ref and alias != dataset_name:
+            continue
+        return os.path.join(dataset_id, "data", "*")
 
     raise Exception(f"Dataset {dataset_ref} not found")
 """
