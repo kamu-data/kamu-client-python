@@ -51,12 +51,15 @@ def workspace_mt(tempdir):
                 kind: CLIConfig
                 version: 1
                 content:
-                  users:
-                    predefined:
-                      - accountName: kamu
-                        isAdmin: true
-                        avatarUrl: https://avatars.githubusercontent.com/u/50896974?s=200&v=4
-                        email: support+kamu@kamu.dev
+                  auth:
+                    users:
+                      predefined:
+                        - accountName: kamu
+                          password: kamu.kamu.kamu
+                          properties:
+                            - admin
+                          avatarUrl: https://avatars.githubusercontent.com/u/50896974?s=200&v=4
+                          email: kamu@example.com
                 """
             )
         )
